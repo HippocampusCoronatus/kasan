@@ -9,12 +9,14 @@
     <link rel="stylesheet" href="./style/main.css" type="text/css" />
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/utilities/kasan.js"></script>
     <script type="text/javascript">
         <!-- 直書きすいません -->
         function a(frm) {
             var namae = document.getElementById("input_name").value;
             if (!namae) {
-                alert("名前を入力してください。");
+                aler
+			t("名前を入力してください。");
                 return;
             }
             
@@ -36,6 +38,9 @@
     <div class="header"></div>
     <div class="main">
       <div>かあさん貸借システム</div>
+      <section id="section_my_accounts">
+        <article id="article_my_accounts_list"><div></div></article>
+      </section>
       <form accept-charset="UTF-8" action="" method="">
         <div class="form-body">
           <label for="input_name">名前を入力してください。</label>
@@ -49,5 +54,22 @@
       </form>
     </div>
     <div class="footer"></div>
+    <script type="text/javascript">
+        <!-- 初期化通信直書き -->
+        (function() {
+            kasan.get("api/accounts").then(
+                function(result) {
+                    var accounts = JSON.parse(result);
+                    var html = "【あなたのかしかり】</br>";
+                    accounts.forEach(function(account) {
+                        html += "" + account.PartnerMemberID + "　：　" +  account.LoanAmount + "</br>";
+                    });
+                    document.querySelector("#article_my_accounts_list > div").innerHTML = html;
+                },
+                function(result) {
+                    alert("初期化通信に失敗しました。");
+                });
+        })();
+    </script>
   </body>
 </html>
