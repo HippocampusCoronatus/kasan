@@ -17,12 +17,12 @@ import jp.co.kasan.db.entity.MMember;
 import javax.ws.rs.core.Response;
 
 /**
- * 各会員の会計APIを提供します。
+ * 自身の会計APIを提供します。
  * @author rued97
  */
 @RequestScoped
-@Path("accounts")
-public class MemberAccountsWebAPI {
+@Path("me/accounts")
+public class MeAccountsAPI {
 
 	/** ログイン中会員ID */
 	// TODO:のっと実装
