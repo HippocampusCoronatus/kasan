@@ -25,7 +25,9 @@ public class ApplicationConfig extends Application {
 	 * If required, comment out calling this method in getClasses().
 	 */
 	private void addRestResourceClasses(Set<Class<?>> resources) {
+		resources.add(jp.co.kasan.web.service.api.AuthenticationWebAPI.class);
 		resources.add(jp.co.kasan.web.service.api.MemberAccountsWebAPI.class);
+		resources.add(jp.co.kasan.web.service.api.MembersWebAPI.class);
 	}
 	
 }

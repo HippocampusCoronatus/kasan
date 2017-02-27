@@ -37,7 +37,6 @@
     <div class="header"></div>
     <div class="main">
       <div>かあさん貸借システム</div>
-	  <h3 id="h3_title"></h3>
       <section id="section_my_accounts">
         <article id="article_my_accounts_list"><div></div></article>
       </section>
@@ -52,29 +51,11 @@
           </div>
         </div>
       </form>
-      <div><a href="" id="btn_logout">ログアウト</a></div>
     </div>
     <div class="footer"></div>
-    <!-- 初期化通信直書き -->
     <script type="text/javascript">
+        <!-- 初期化通信直書き -->
         (function() {
-			document.querySelector("#btn_logout").addEventListener("click", function() {
-				kasan.post("api/authentication/logout").then(function() {
-					location.href = "login.html";
-				});
-				return false;
-			});
-			kasan.get("api/members/me").then(
-					function(result) {
-						if(!result) {
-							location.href = "login.html";
-						}
-						var me = JSON.parse(result);
-						document.querySelector("#h3_title").innerHTML = "<div>" + me.Name + "さんのページ</div>";
-					},
-					function(result) {
-
-					});
             kasan.get("api/accounts").then(
                 function(result) {
                     var accounts = JSON.parse(result);
