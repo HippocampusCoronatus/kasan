@@ -1,0 +1,1 @@
+${licenseFirst} Copyright © 2017- Kasan All Rights Reserved.${licenseLast}

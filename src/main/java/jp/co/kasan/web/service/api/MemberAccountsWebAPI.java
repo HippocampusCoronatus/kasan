@@ -4,10 +4,13 @@ package jp.co.kasan.web.service.api;
 import java.util.ArrayList;
 import java.util.List;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import jp.co.kasan.db.entity.MMember;
 
 /**
  * 各会員の会計APIを提供します。
@@ -21,6 +24,9 @@ public class MemberAccountsWebAPI {
 	// TODO:のっと実装
 	// @Inject
 	private String LoggedInMemberID;
+
+	@Inject
+	private EntityManager EM;
 
 	/**
 	 * 自身のすべての会計情報を提供します。
@@ -47,6 +53,8 @@ public class MemberAccountsWebAPI {
 			account.LoanAmount = -34120;
 			accounts.add(account);
 		}
+		List<MMember> ms = this.EM.createQuery("select m from MMember m", MMember.class).getResultList();
+		ms.stream().forEach(System.out::println);
 		return accounts;
 	}
 	
