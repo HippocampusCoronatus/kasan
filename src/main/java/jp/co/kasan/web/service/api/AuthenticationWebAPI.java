@@ -7,6 +7,9 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import jp.co.kasan.message.MessageContainer;
+import jp.co.kasan.message.MessageManager;
+import jp.co.kasan.web.auth.AuthenticationHandler;
 import jp.co.kasan.web.auth.LoggedInMemberProducer;
 import jp.co.kasan.web.auth.Member;
 
@@ -22,19 +25,33 @@ public class AuthenticationWebAPI {
 	private Logger logger;
 	@Inject
 	private LoggedInMemberProducer LoggedInMemberProducer;
+	@Inject
+	private AuthenticationHandler AuthenticationHandler;
+	@Inject
+	private MessageManager MessageManager;
 
 	/**
 	 * TODO:全然未実装
 	 */
 	@Path("login")
 	@POST
-	public void login() {
-		Member loggedInMember = new Member();
-		loggedInMember.ID = "99999";
-		loggedInMember.Name = "山田太郎";
+	public void login(Login login) {
+		Member m = this.AuthenticationHandler.authenticate(login.EMail, login.Password);
+		if(m == null) {
+			this.MessageManager.addMessage(new MessageContainer("Errors_InvalidAuthentication", "メールアドレスかパスワードに誤りがあります。"));
+			throw new BadRequestException();
+		}
+		// TODO:リダイレクト返す？とりあえず今はOKレスポンスにしているだけ。
+	}
 
-		this.logger.log(Level.FINE, "ログイン成功　[{0}]", loggedInMember.ID);
-		this.LoggedInMemberProducer.setLoggedInMember(loggedInMember);
+	/**
+	 * ログイン情報を保持します。
+	 */
+	public static class Login {
+		/** Eメール */
+		public String EMail;
+		/** パスワード */
+		public String Password;
 	}
 
 	/**
@@ -48,7 +65,7 @@ public class AuthenticationWebAPI {
 		if(loggedInMember == null) {
 			return;
 		}
-		this.logger.log(Level.FINE, "ログイン情報破棄　[{0}]", loggedInMember.ID);
+		this.logger.log(Level.FINE, "ログイン情報破棄　[{0}]", loggedInMember.No);
 		this.LoggedInMemberProducer.setLoggedInMember(null);
 	}
 

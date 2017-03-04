@@ -60,14 +60,14 @@
         (function() {
 			document.querySelector("#btn_logout").addEventListener("click", function() {
 				kasan.post("api/authentication/logout").then(function() {
-					location.href = "login.html";
+					location.href = "login_test.html";
 				});
 				return false;
 			});
 			kasan.get("api/members/me").then(
 					function(result) {
 						if(!result) {
-							location.href = "login.html";
+							location.href = "login_test.html";
 						}
 						var me = JSON.parse(result);
 						// TODO:innerHTMLだけどとりあえず気にしない。
