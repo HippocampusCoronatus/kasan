@@ -31,11 +31,12 @@ public class AuthenticationWebAPI {
 	private MessageManager MessageManager;
 
 	/**
-	 * TODO:全然未実装
+	 * 新規にログインします。
+	 * @param login 認証情報
 	 */
 	@Path("login")
 	@POST
-	public void login(Login login) {
+	public void login(Authentication login) {
 		Member m = this.AuthenticationHandler.authenticate(login.EMail, login.Password);
 		if(m == null) {
 			this.MessageManager.addMessage(new MessageContainer("Errors_InvalidAuthentication", "メールアドレスかパスワードに誤りがあります。"));
@@ -47,7 +48,7 @@ public class AuthenticationWebAPI {
 	/**
 	 * ログイン情報を保持します。
 	 */
-	public static class Login {
+	public static class Authentication {
 		/** Eメール */
 		public String EMail;
 		/** パスワード */
