@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!-- TODO:サーバー連携を確認するためだけのページです。削除予定。 -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ログインテスト</title>
+    <script src="js/utilities/kasan.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-min.js"></script>
+  </head>
+  <body>
+
+    <section>
+      <h1>ログインテスト</h1>
+      <article>
+        <h1>ログイン情報入力</h1>
+        <div>メールアドレス<input type="text" data-bind="value: EMail" /></div>
+        <div>パスワード<input type="password" data-bind="value: Password" /></div>
+        <div><a href="" data-bind="click: login">ログイン</a></div>
+        <div><a href="register_test.html">新規登録へ</a></div>
+      </article>
+    </section>
+    
+    <script type="text/javascript">
+      (function() {
+        var LoginViewMoel = function(){
+          var self = this;
+          self.EMail = ko.observable("");
+          self.Password = ko.observable();
+          self.login = function() {
+            var json = JSON.stringify({
+              EMail: self.EMail(),
+              Password: self.Password()
+            });
+            kasan.post("api/authentication/login", json).then(function(result) {
+              location.href = "index.html";
+            }, function(result) {
+              alert("ログインに失敗しました。");
+            });
+          };
+        };
+        var viewModel = new LoginViewMoel();
+        ko.applyBindings(viewModel);
+      })();
+    </script>
+
+  </body>
+</html>

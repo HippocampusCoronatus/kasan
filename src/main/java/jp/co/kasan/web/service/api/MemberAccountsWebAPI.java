@@ -54,7 +54,6 @@ public class MemberAccountsWebAPI {
 			accounts.add(account);
 		}
 		List<MMember> ms = this.EM.createQuery("select m from MMember m", MMember.class).getResultList();
-		ms.stream().forEach(System.out::println);
 		return accounts;
 	}
 	

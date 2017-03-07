@@ -3,11 +3,15 @@ package jp.co.kasan.db.entity;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -26,6 +30,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 	@NamedQuery(name = "MMember.findByName", query = "SELECT m FROM MMember m WHERE m.name = :name"),
 	@NamedQuery(name = "MMember.findByEmail", query = "SELECT m FROM MMember m WHERE m.email = :email")})
 public class MMember implements Serializable {
+
+	@Lob
+    @Column(name = "password")
+	private byte[] password;
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "mMember", fetch = FetchType.LAZY)
+	private MAuthenticationToken mAuthenticationToken;
 
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -105,6 +115,22 @@ public class MMember implements Serializable {
 	@Override
 	public String toString() {
 		return "jp.co.kasan.db.entity.MMember[ no=" + no + " ]";
+	}
+
+	public byte[] getPassword() {
+		return password;
+	}
+
+	public void setPassword(byte[] password) {
+		this.password = password;
+	}
+
+	public MAuthenticationToken getMAuthenticationToken() {
+		return mAuthenticationToken;
+	}
+
+	public void setMAuthenticationToken(MAuthenticationToken mAuthenticationToken) {
+		this.mAuthenticationToken = mAuthenticationToken;
 	}
 	
 }
