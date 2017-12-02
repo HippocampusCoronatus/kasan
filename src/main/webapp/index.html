@@ -8,8 +8,6 @@
     <link rel="shortcut icon" href="./images/coin.png" />
     <link rel="stylesheet" href="./style/main.css" type="text/css" />
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="js/utilities/kasan.js"></script>
     <script type="text/javascript">
         <!-- 直書きすいません -->
         function a(frm) {
@@ -18,7 +16,6 @@
                 alert("名前を入力してください。");
                 return;
             }
-            
             var kingaku = document.getElementById("amount_of_maney").value;
             if (!kingaku) {
                 alert("金額を入力してください。");
@@ -34,13 +31,18 @@
     </script>
   </head>
   <body>
-    <div class="header"></div>
+    <header></header>
     <div class="main">
       <div>かあさん貸借システム</div>
-	  <h3 id="h3_title"></h3>
-      <section id="section_my_accounts">
-        <article id="article_my_accounts_list"><div></div></article>
-      </section>
+      <div><h3 id="h3_title" v-cloak>{{name}}</h3></div>
+      <article id="account_list">
+        <section>
+          <h4>【あなたのかしかり】</h4>
+          <p v-for="account in accountList" v-cloak>
+            {{account.PartnerMemberID}} : {{account.LoanAmount}}
+          </p>
+        </section>
+      </article>
       <form accept-charset="UTF-8" action="" method="">
         <div class="form-body">
           <label for="input_name">名前を入力してください。</label>
@@ -52,44 +54,61 @@
           </div>
         </div>
       </form>
-      <div><a href="" id="btn_logout">ログアウト</a></div>
+      <div id="logout"><a v-on:click="logout()">ログアウト</a></div>
     </div>
-    <div class="footer"></div>
+    <footer></footer>
+    <script src="js/utilities/kasan.js"></script>
+    <script src="https://unpkg.com/vue"></script>
     <!-- 初期化通信直書き -->
     <script type="text/javascript">
-        (function() {
-			document.querySelector("#btn_logout").addEventListener("click", function() {
-				kasan.post("api/authentication/logout").then(function() {
-					location.href = "login_test.html";
-				});
-				return false;
-			});
-			kasan.get("api/members/me").then(
-					function(result) {
-						if(!result) {
-							location.href = "login_test.html";
-						}
-						var me = JSON.parse(result);
-						// TODO:innerHTMLだけどとりあえず気にしない。
-						document.querySelector("#h3_title").innerHTML = "<div>" + me.Name + "さんのページ</div>";
-					},
-					function(result) {
-
-					});
-            kasan.get("api/accounts").then(
-                function(result) {
-                    var accounts = JSON.parse(result);
-                    var html = "【あなたのかしかり】</br>";
-                    accounts.forEach(function(account) {
-                        html += "" + account.PartnerMemberID + "　：　" +  account.LoanAmount + "</br>";
-                    });
-					// TODO:innerHTMLだけどとりあえず気にしない。
-                    document.querySelector("#article_my_accounts_list > div").innerHTML = html;
+      (function() {
+        new Vue({
+          el: "#logout",
+          methods: {
+            logout: function () {
+              kasan.post("api/authentication/logout").then(
+                function() {
+                  location.href = "login_test.html";
                 },
-                function(result) {
-                    alert("初期化通信に失敗しました。");
-                });
-        })();
+                function(reason) {
+                  alert("ログアウトに失敗しました。");
+                }
+              );
+            }
+          }
+        });
+        kasan.get("api/members/me").then(
+          function(result) {
+            if (!result) {
+              location.href = "login_test.html";
+            }
+            var me = JSON.parse(result);
+            new Vue({
+              el: "#h3_title",
+              data: {
+                name: me.Name + "さんのページ"
+              }
+            });
+          },
+          function(result) {
+
+          }
+        );
+        kasan.get("api/accounts").then(
+          function(result) {
+            var accounts = JSON.parse(result);
+            new Vue({
+              el: "#account_list",
+              data: {
+                accountList: accounts
+              }
+            });
+          },
+          function(result) {
+            alert("初期化通信に失敗しました。");
+          }
+        );
+      })();
     </script>
   </body>
 </html>

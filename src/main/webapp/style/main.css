@@ -1,12 +1,16 @@
+[v-cloak] {
+  display: none;
+}
+
 body {
   width: 100%;
   height: 100%;
   background-size: cover;
   background-color: #f8dce0;
-  background-image: url("../images/background.jpg")
+  background-image: url("../images/wallpaper.jpg")
 }
 
-.main div   {
+.main {
   width: 30%;
   height: 60%;
   margin: 100px auto;
