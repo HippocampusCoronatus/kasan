@@ -106,6 +106,21 @@
 				<artifactId>maven-surefire-report-plugin</artifactId>
 				<version>2.12.4</version>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+          <archive>
+            <manifest>
+              <mainClass>kasan</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+			</plugin>
 		</plugins>
 	</build>
 
