@@ -1,6 +1,8 @@
 /* Copyright © 2017- Kasan All Rights Reserved. */
 package jp.co.kasan.web.service.api;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -22,6 +24,8 @@ import jp.co.kasan.web.auth.Member;
 @Path("members")
 public class MembersWebAPI {
 
+	@Inject
+	private Logger logger;
 	@Inject @LoggedIn
 	private Member LoggedInMember;
 	@Inject
@@ -31,23 +35,22 @@ public class MembersWebAPI {
 	 * 会員を新規に登録します。
 	 * @param member 会員の入力
 	 */
-	@Path("")
+	@Path("/")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void register(MemberForRegister member) {
 		this.MemberManager.register(member);
-		
-		return;
 	}
 
 	/**
 	 * 自身の会員情報を取得します。
 	 * @return 会員
 	 */
-	@Path("me")
+	@Path("/me")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Member getMe() {
+		this.logger.log(Level.FINE, "メンバー情報　[{0}]", this.LoggedInMember.getNo());		
 		return this.LoggedInMember;
 	}
 

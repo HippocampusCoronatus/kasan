@@ -42,7 +42,6 @@ public class AuthenticationWebAPI {
 			this.MessageManager.addMessage(new MessageContainer("Errors_InvalidAuthentication", "メールアドレスかパスワードに誤りがあります。"));
 			throw new BadRequestException();
 		}
-		// TODO:リダイレクト返す？とりあえず今はOKレスポンスにしているだけ。
 	}
 
 	/**
@@ -66,7 +65,7 @@ public class AuthenticationWebAPI {
 		if(loggedInMember == null) {
 			return;
 		}
-		this.logger.log(Level.FINE, "ログイン情報破棄　[{0}]", loggedInMember.No);
+		this.logger.log(Level.FINE, "ログイン情報破棄　[{0}]", loggedInMember.getNo());
 		this.LoggedInMemberProducer.setLoggedInMember(null);
 	}
 

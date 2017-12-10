@@ -1,15 +1,19 @@
 /* Copyright © 2017- Kasan All Rights Reserved. */
 package jp.co.kasan.members;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import jp.co.kasan.db.finder.MMemberFinder;
+import jp.co.kasan.db.Transactional;
+import jp.co.kasan.db.entity.MAccountBook;
 import jp.co.kasan.db.entity.MMember;
+import jp.co.kasan.journal.GeneralAccountBookGenerator;
 import jp.co.kasan.utils.PasswordUtils;
 
-/**
+/**import jp.co.kasan.journal.GeneralAccountBookGenerator;
+
  * 会員の管理者。
  * @author rued97
  */
@@ -19,7 +23,7 @@ public class MemberManager {
 	@Inject
 	private EntityManager EM;
 	@Inject
-	private MMemberFinder MemberFinder;
+	private GeneralAccountBookGenerator BookGenerator;
 	@Inject
 	private MemberNoIncrementor MemberNoIncrementor;
 
@@ -35,6 +39,11 @@ public class MemberManager {
 
 		// 検証OKなので会員登録。
 		MMember m = container.convertToMMember(this.MemberNoIncrementor.next());
+		// TODO:家計簿は別途登録作業を必要としたい
+		List<MAccountBook> books = new ArrayList<>();
+		MAccountBook book = this.BookGenerator.generate(m.getName() + "さんの家計簿");
+		books.add(book);
+		m.setMAccountBookList(books);
 		this.EM.persist(m);
 	}
 

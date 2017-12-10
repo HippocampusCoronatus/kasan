@@ -74,9 +74,9 @@
 						document.querySelector("#h3_title").innerHTML = "<div>" + me.Name + "さんのページ</div>";
 					},
 					function(result) {
-
+            location.href = "login_test.html";
 					});
-            kasan.get("api/accounts").then(
+            kasan.get("api/loan").then(
                 function(result) {
                     var accounts = JSON.parse(result);
                     var html = "【あなたのかしかり】</br>";
@@ -87,7 +87,6 @@
                     document.querySelector("#article_my_accounts_list > div").innerHTML = html;
                 },
                 function(result) {
-                    alert("初期化通信に失敗しました。");
                 });
         })();
     </script>

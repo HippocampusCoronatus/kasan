@@ -30,6 +30,22 @@ public class MMemberFinder {
 	public List<MMember> load() {
 		return this.EM.createQuery("SELECT m FROM MMember m", MMember.class).getResultList();
 	}
+	
+	/**
+	 * 会員番号から会員を取得します。
+	 * @param no 会員番号
+	 * @return 会員リスト。みつからない場合はnull。
+	 */
+	public MMember findByNo(Long no) {
+		Condition c = new Condition();
+		c.No = no;
+		List<MMember> members = this.findBy(c);
+		if(members.isEmpty()) {
+			return null;
+		}
+		// PKを指定しているので1つしかない前提。
+		return members.get(0);
+	}
 
 	/**
 	 * Eメールから会員リストを取得します。
@@ -92,7 +108,7 @@ public class MMemberFinder {
 	 */
 	public static class Condition {
 		/** 会員番号 */
-		public Integer No;
+		public Long No;
 		/** Eメール */
 		public String EMail;
 		/** パスワード */
