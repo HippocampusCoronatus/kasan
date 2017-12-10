@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://www.eclipse.org/eclipselink/xsds/persistence/orm"
+								 version="2.1">
+
+	<converter class="jp.co.kasan.db.converter.LocalDateConverter" autoApply="true" />
+	<converter class="jp.co.kasan.db.converter.LocalDateTimeConverter" autoApply="true" />
+
+	<entity class="jp.co.kasan.db.entity.MAccountBook" />
+	<entity class="jp.co.kasan.db.entity.MAccountTitle" />
+	<entity class="jp.co.kasan.db.entity.MAccountTitleItem" />
+	<entity class="jp.co.kasan.db.entity.MAuthenticationToken" />
+	<entity class="jp.co.kasan.db.entity.MMember" />
+	<entity class="jp.co.kasan.db.entity.TJournal">
+		<convert converter="jp.co.kasan.db.converter.LocalDateConverter" attribute-name="tradingDate"/>
+	</entity>
+	<entity class="jp.co.kasan.db.entity.TJournalDetail" />
+	<entity class="jp.co.kasan.db.entity.TJournalDetailItem" />
+</entity-mappings>

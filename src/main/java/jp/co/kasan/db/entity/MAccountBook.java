@@ -8,7 +8,10 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -19,8 +22,8 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author rued97
  */
 @Entity
-@Table(name = "m_member")
-public class MMember implements Serializable {
+@Table(name = "m_account_book")
+public class MAccountBook implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -30,23 +33,28 @@ public class MMember implements Serializable {
 	private Long no;
 
     @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "email")
-	private String email;
-
-    @NotNull
     @Size(min = 1, max = 30)
     @Column(name = "name")
 	private String name;
 
-    @Column(name = "password")
-	private byte[] password;
+	@JoinTable(name = "m_member_account_book_relation",
+			joinColumns = { 
+				@JoinColumn(name = "account_book_no", referencedColumnName = "no")
+			},
+			inverseJoinColumns = {
+				@JoinColumn(name = "member_no", referencedColumnName = "no")
+			})
+    @ManyToMany()
+	private List<MMember> mMemberList;
 
-	@ManyToMany(mappedBy = "mMemberList", cascade = {CascadeType.PERSIST})
-	private List<MAccountBook> mAccountBookList;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "mAccountBook")
+	private List<MAccountTitle> mAccountTitleList;
 
-	public MMember() {
-		this.mAccountBookList = new ArrayList<>();
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "mAccountBook")
+	private List<TJournal> tJournalList;
+
+	public MAccountBook() {
+		this.mMemberList = new ArrayList<>();
 	}
 
 	public Long getNo() {
@@ -65,34 +73,27 @@ public class MMember implements Serializable {
 		this.name = name;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public byte[] getPassword() {
-		return password;
-	}
-
-	public void setPassword(byte[] password) {
-		this.password = password;
+	@XmlTransient
+	public List<MMember> getMMemberList() {
+		return mMemberList;
 	}
 
 	@XmlTransient
-	public List<MAccountBook> getMAccountBookList() {
-		return mAccountBookList;
+	public List<MAccountTitle> getMAccountTitleList() {
+		return mAccountTitleList;
 	}
 
-	/**
-	 * 会計帳簿を追加します。
-	 * @param book 会計帳簿
-	 */
-	public void addMAccountBook(MAccountBook book) {
-		this.mAccountBookList.add(book);
-		book.getMMemberList().add(this);
+	public void setMAccountTitleList(List<MAccountTitle> mAccountTitleList) {
+		this.mAccountTitleList = mAccountTitleList;
+	}
+
+	@XmlTransient
+	public List<TJournal> getTJournalList() {
+		return tJournalList;
+	}
+
+	public void setTJournalList(List<TJournal> tJournalList) {
+		this.tJournalList = tJournalList;
 	}
 
 	@Override
@@ -105,10 +106,10 @@ public class MMember implements Serializable {
 	@Override
 	public boolean equals(Object object) {
 		// TODO: Warning - this method won't work in the case the id fields are not set
-		if (!(object instanceof MMember)) {
+		if (!(object instanceof MAccountBook)) {
 			return false;
 		}
-		MMember other = (MMember) object;
+		MAccountBook other = (MAccountBook) object;
 		if ((this.no == null && other.no != null) || (this.no != null && !this.no.equals(other.no))) {
 			return false;
 		}
@@ -117,7 +118,7 @@ public class MMember implements Serializable {
 
 	@Override
 	public String toString() {
-		return "jp.co.kasan.db.MMember[ no=" + no + " ]";
+		return "jp.co.kasan.db.MAccountBook[ no=" + no + " ]";
 	}
 	
 }
