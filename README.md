@@ -72,6 +72,27 @@ source [プロジェクトのルートパス]/src/main/resources/data/Kasan.sql
 asadmin add-resources [プロジェクトのルートパス]/src/main/resources/env/localhost/glassfish-resources.xml
 ```
 
+###### 5.フロントサイドの準備
+Node.jsで開発を行います。
+
+5.1 [Node.js](https://nodejs.jp/)のインストール
+ただ、Nodeの最新バージョンはすぐ変わってしまうのでバージョン管理ツールを推奨します。
+こちら↓が参考になります。(windowsの場合)
+https://qiita.com/yokoh9/items/20d6bdc6030a3a861189
+
+5.2 インストール後、package.jsonがあるディレクトリで以下のコマンドを実行
+
+```
+npm install
+```
+
+5.3 node_modulesフォルダが作成されたら、以下のコマンドでビルド
+src/main/webapp/jsの配下にbuild.jsが作成されればOK
+
+```
+npm run build
+```
+
 ###### 5.Kasanプロジェクトをビルド
 プロジェクトウィンドウ→Kasanプロジェクトを右クリック→依存性でビルド
 ###### 6.Kasanプロジェクトを実行

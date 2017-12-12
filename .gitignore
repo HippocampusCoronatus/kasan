@@ -1,2 +1,5 @@
 /target/
 *.mwb
+/node_modules/
+/src/main/webapp/js/build.js
+/src/main/webapp/js/build.js.map
