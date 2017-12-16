@@ -38,8 +38,8 @@
       <article>
         <section>
           <h4>【あなたのかしかり】</h4>
-          <p v-for="account in accountList" v-cloak>
-            {{account.PartnerMemberID}} : {{account.LoanAmount}}
+          <p v-for="loan in loanList" v-cloak>
+            {{loan.PartnerMemberID}} : {{loan.LoanAmount}}
           </p>
         </section>
       </article>
@@ -90,11 +90,11 @@
           created() {
             axios.all([
               addConfig.get("api/members/me"),
-              addConfig.get("api/accounts")
+              addConfig.get("api/loans/")
             ])
-            .then( axios.spread( (me, accounts) => {
+            .then( axios.spread( (me, loans) => {
               vm.name = me.data.Name + "さんのページ";
-              vm.accountList = accounts.data;
+              vm.loanList = loans.data;
             }))
             .catch((e) => {
               alert("初期化通信に失敗しました。");

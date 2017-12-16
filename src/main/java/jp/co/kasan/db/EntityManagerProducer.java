@@ -1,20 +1,23 @@
 /* Copyright © 2017- Kasan All Rights Reserved. */
 package jp.co.kasan.db;
 
-import javax.enterprise.context.Dependent;
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 
 /**
  * EntityManager創造主。
  * @author rued97
  */
-@Dependent
+@RequestScoped
 public class EntityManagerProducer {
 
-	@PersistenceContext(unitName="KasanDB")
-	private EntityManager em;
+	@PersistenceUnit(unitName="KasanDB")
+	private EntityManagerFactory EMF;
+
+	private EntityManager EM;
 
 	/**
 	 * EntityManagerを取得します。
@@ -22,7 +25,10 @@ public class EntityManagerProducer {
 	 */
 	@Produces
 	public EntityManager getEntityManager() {
-		return this.em;
+		if(EM == null) {
+			this.EM = this.EMF.createEntityManager();
+		}
+		return this.EM;
 	}
 
 }

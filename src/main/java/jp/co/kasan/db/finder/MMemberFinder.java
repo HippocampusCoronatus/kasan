@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import jp.co.kasan.db.entity.MMember;
 import jp.co.kasan.utils.StringUtils;
@@ -29,6 +30,22 @@ public class MMemberFinder {
 	 */
 	public List<MMember> load() {
 		return this.EM.createQuery("SELECT m FROM MMember m", MMember.class).getResultList();
+	}
+	
+	/**
+	 * 会員番号から会員を取得します。
+	 * @param no 会員番号
+	 * @return 会員リスト。みつからない場合はnull。
+	 */
+	public MMember findByNo(Long no) {
+		Condition c = new Condition();
+		c.No = no;
+		List<MMember> members = this.findBy(c);
+		if(members.isEmpty()) {
+			return null;
+		}
+		// PKを指定しているので1つしかない前提。
+		return members.get(0);
 	}
 
 	/**
@@ -53,6 +70,20 @@ public class MMemberFinder {
 		c.EMail = email;
 		c.Password = password;
 		return this.findBy(c);
+	}
+
+	/**
+	 * すべての会員の中で最大Noを取得します。
+	 * @return 最大No
+	 */
+	public Long findMaxNo() {
+		TypedQuery<MMember> query = this.EM.createQuery("SELECT m FROM MMember m ORDER BY m.no DESC", MMember.class);
+		query.setMaxResults(1);
+		try {
+			return query.getSingleResult().getNo();
+		} catch(NoResultException e) {
+			return null;
+		}
 	}
 
 	/**
@@ -92,7 +123,7 @@ public class MMemberFinder {
 	 */
 	public static class Condition {
 		/** 会員番号 */
-		public Integer No;
+		public Long No;
 		/** Eメール */
 		public String EMail;
 		/** パスワード */

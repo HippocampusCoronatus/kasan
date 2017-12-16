@@ -6,7 +6,7 @@ import javax.inject.Inject;
 import jp.co.kasan.db.finder.MMemberFinder;
 
 /**
- * 会員番号の裁判を担当します。
+ * 会員番号の採番を担当します。
  * @author rued97
  */
 @Dependent
@@ -21,6 +21,6 @@ public class MemberNoIncrementor {
 	 * @return 次番号
 	 */
 	public long next() {
-		return this.MemberFinder.load().size();
+		return this.MemberFinder.findMaxNo() + 1;
 	}
 }
