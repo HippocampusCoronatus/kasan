@@ -5,7 +5,7 @@
     <article>
       <section>
         <h4>【あなたのかしかり】</h4>
-        <p v-for="account in accountList" v-cloak>
+        <p v-for="(account, index) in accountList" v-bind:key="index" v-cloak>
           {{account.PartnerMemberID}} : {{account.LoanAmount}}
         </p>
       </section>
@@ -21,7 +21,7 @@
         </div>
       </div>
     </form>
-    <div><a v-on:click="logout()">ログアウト</a></div>
+    <div><router-link to="/kasan/logout">ログアウト</router-link></div>
   </div>
 </template>
 
@@ -37,22 +37,12 @@ export default class MainPage extends Vue {
   inputName: string = "";
   amountOfManey: string = "";
 
-  addConfig = axios.create({
+  addConfig: any = axios.create({
     headers: {
       'X-Requested-With': 'XMLHttpRequest',
       'Content-Type': 'application/json; charset=UTF-8'
     }
   })
-
-  logout(): void {
-    this.addConfig.post("api/authentication/logout")
-    .then(() => {
-      location.href = "login_test.html";
-    })
-    .catch((e) => {
-      alert("ログアウトに失敗しました。");
-    })
-  }
 
   a(frm: any): any {
       if (!this.inputName) {
@@ -79,13 +69,14 @@ export default class MainPage extends Vue {
     .then( axios.spread( (me: any, accounts: any) => {
       if (me.status === 204 || accounts.status === 204) {
         alert("データがありませんでした。");
+        this.$router.push('/kasan/login');
       }
       this.name = me.data.Name + "さんのページ";
       this.accountList = accounts.data;
     }))
     .catch((e: any) => {
       alert("初期化通信に失敗しました。");
-      location.href = "login_test.html";
+      this.$router.push('/kasan/login');
     })
   }
 
