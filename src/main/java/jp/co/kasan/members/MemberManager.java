@@ -10,7 +10,7 @@ import jp.co.kasan.db.entity.MMember;
 import jp.co.kasan.journal.GeneralAccountBookGenerator;
 import jp.co.kasan.utils.PasswordUtils;
 
-/**import jp.co.kasan.journal.GeneralAccountBookGenerator;
+/**
 
  * 会員の管理者。
  * @author rued97
