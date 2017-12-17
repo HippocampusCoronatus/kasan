@@ -21,6 +21,7 @@ public class MemberNoIncrementor {
 	 * @return 次番号
 	 */
 	public long next() {
-		return this.MemberFinder.findMaxNo() + 1;
+		Long maxNo = this.MemberFinder.findMaxNo();
+		return (maxNo == null) ? 0 : maxNo + 1;
 	}
 }
