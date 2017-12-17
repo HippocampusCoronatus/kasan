@@ -37,7 +37,7 @@ public class MAccountBookFinder {
 		try {
 			return query.getSingleResult().getNo();
 		} catch(NoResultException e) {
-			return null;
+			return 0l;
 		}
 	}
 

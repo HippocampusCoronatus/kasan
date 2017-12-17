@@ -82,7 +82,7 @@ public class MMemberFinder {
 		try {
 			return query.getSingleResult().getNo();
 		} catch(NoResultException e) {
-			return null;
+			return 0l;
 		}
 	}
 
