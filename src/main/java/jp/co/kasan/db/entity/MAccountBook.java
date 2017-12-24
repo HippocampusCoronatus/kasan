@@ -4,6 +4,7 @@ package jp.co.kasan.db.entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +19,7 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
+ * 会計帳簿マスタ。
  *
  * @author rued97
  */
@@ -28,23 +30,23 @@ public class MAccountBook implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-    @NotNull
-    @Column(name = "no")
+	@NotNull
+	@Column(name = "no")
 	private Long no;
 
-    @NotNull
-    @Size(min = 1, max = 30)
-    @Column(name = "name")
+	@NotNull
+	@Size(min = 1, max = 30)
+	@Column(name = "name")
 	private String name;
 
 	@JoinTable(name = "m_member_account_book_relation",
-			joinColumns = { 
+			joinColumns = {
 				@JoinColumn(name = "account_book_no", referencedColumnName = "no")
 			},
 			inverseJoinColumns = {
 				@JoinColumn(name = "member_no", referencedColumnName = "no")
 			})
-    @ManyToMany()
+	@ManyToMany()
 	private List<MMember> mMemberList;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "mAccountBook")
@@ -55,6 +57,8 @@ public class MAccountBook implements Serializable {
 
 	public MAccountBook() {
 		this.mMemberList = new ArrayList<>();
+		this.mAccountTitleList = new ArrayList<>();
+		this.tJournalList = new ArrayList<>();
 	}
 
 	public Long getNo() {
@@ -78,13 +82,24 @@ public class MAccountBook implements Serializable {
 		return mMemberList;
 	}
 
+	@Deprecated
+	public void setMMemberList(List<MMember> mMemberList) {
+		this.mMemberList = mMemberList;
+	}
+
 	@XmlTransient
 	public List<MAccountTitle> getMAccountTitleList() {
 		return mAccountTitleList;
 	}
 
+	@Deprecated
 	public void setMAccountTitleList(List<MAccountTitle> mAccountTitleList) {
 		this.mAccountTitleList = mAccountTitleList;
+	}
+
+	public void addMAccountTitle(MAccountTitle mAccountTitle) {
+		this.mAccountTitleList.add(mAccountTitle);
+		mAccountTitle.setMAccountBook(this);
 	}
 
 	@XmlTransient
@@ -92,25 +107,36 @@ public class MAccountBook implements Serializable {
 		return tJournalList;
 	}
 
+	@Deprecated
 	public void setTJournalList(List<TJournal> tJournalList) {
 		this.tJournalList = tJournalList;
 	}
 
+	public void addTJournal(TJournal tJournal) {
+		this.tJournalList.add(tJournal);
+		tJournal.setMAccountBook(this);
+	}
+
 	@Override
 	public int hashCode() {
-		int hash = 0;
-		hash += (no != null ? no.hashCode() : 0);
+		int hash = 5;
+		hash = 37 * hash + Objects.hashCode(this.no);
 		return hash;
 	}
 
 	@Override
-	public boolean equals(Object object) {
-		// TODO: Warning - this method won't work in the case the id fields are not set
-		if (!(object instanceof MAccountBook)) {
+	public boolean equals(Object obj) {
+		if(this == obj) {
+			return true;
+		}
+		if(obj == null) {
 			return false;
 		}
-		MAccountBook other = (MAccountBook) object;
-		if ((this.no == null && other.no != null) || (this.no != null && !this.no.equals(other.no))) {
+		if(getClass() != obj.getClass()) {
+			return false;
+		}
+		final MAccountBook other = (MAccountBook) obj;
+		if(!Objects.equals(this.no, other.no)) {
 			return false;
 		}
 		return true;
@@ -118,7 +144,7 @@ public class MAccountBook implements Serializable {
 
 	@Override
 	public String toString() {
-		return "jp.co.kasan.db.MAccountBook[ no=" + no + " ]";
+		return "jp.co.kasan.db.MAccountBook[ no=" + this.no + " ]";
 	}
-	
+
 }

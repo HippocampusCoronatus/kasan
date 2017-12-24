@@ -3,8 +3,9 @@ package jp.co.kasan.db.entity;
 
 import jp.co.kasan.db.entity.pk.MAccountTitlePK;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Basic;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -13,76 +14,52 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import jp.co.kasan.journal.type.AccountTitleType;
 
 /**
+ * 勘定科目マスタ
  *
  * @author rued97
  */
 @Entity
 @Table(name = "m_account_title")
-@XmlRootElement
-@NamedQueries({
-	@NamedQuery(name = "MAccountTitle.findAll", query = "SELECT m FROM MAccountTitle m"),
-	@NamedQuery(name = "MAccountTitle.findByAccountBookNo", query = "SELECT m FROM MAccountTitle m WHERE m.mAccountTitlePK.accountBookNo = :accountBookNo"),
-	@NamedQuery(name = "MAccountTitle.findByCode", query = "SELECT m FROM MAccountTitle m WHERE m.mAccountTitlePK.code = :code"),
-	@NamedQuery(name = "MAccountTitle.findByName", query = "SELECT m FROM MAccountTitle m WHERE m.name = :name"),
-	@NamedQuery(name = "MAccountTitle.findByType", query = "SELECT m FROM MAccountTitle m WHERE m.type = :type"),
-	@NamedQuery(name = "MAccountTitle.findByGroup", query = "SELECT m FROM MAccountTitle m WHERE m.accountTitleGroup = :accountTitleGroup")})
 public class MAccountTitle implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
 	@EmbeddedId
 	protected MAccountTitlePK mAccountTitlePK;
-	@Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "name")
+
+	@NotNull
+	@Size(min = 1, max = 255)
+	@Column(name = "name")
 	private String name;
-	@Basic(optional = false)
-    @NotNull
-    @Column(name = "type")
+
+	@NotNull
+	@Column(name = "type")
 	@Enumerated(EnumType.STRING)
 	private AccountTitleType type;
+
 	@Size(max = 255)
-    @Column(name = "account_title_group")
+	@Column(name = "account_title_group")
 	private String accountTitleGroup;
-	@JoinColumn(name = "account_book_no", referencedColumnName = "no", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
+
+	@JoinColumn(name = "account_book_no",
+			referencedColumnName = "no", insertable = false, updatable = false)
+	@ManyToOne(optional = false)
 	private MAccountBook mAccountBook;
+
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "mAccountTitle")
 	private List<MAccountTitleItem> mAccountTitleItemList;
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "mAccountTitle")
-	private List<TJournalDetail> tJournalDetailList;
 
 	public MAccountTitle() {
-	}
-
-	public MAccountTitle(MAccountTitlePK mAccountTitlePK) {
-		this.mAccountTitlePK = mAccountTitlePK;
-	}
-
-	public MAccountTitle(MAccountTitlePK mAccountTitlePK, String name, AccountTitleType type) {
-		this.mAccountTitlePK = mAccountTitlePK;
-		this.name = name;
-		this.type = type;
-	}
-
-	public MAccountTitle(long accountBookNo, String code) {
-		this.mAccountTitlePK = new MAccountTitlePK(accountBookNo, code);
-	}
-
-	public MAccountTitle(MAccountBook accountBook, String code) {
-		this.mAccountBook = accountBook;
-		this.mAccountTitlePK = new MAccountTitlePK(accountBook.getNo(), code);
+		this.mAccountTitlePK = new MAccountTitlePK();
+		this.mAccountTitleItemList = new ArrayList<>();
 	}
 
 	public MAccountTitlePK getMAccountTitlePK() {
@@ -91,6 +68,22 @@ public class MAccountTitle implements Serializable {
 
 	public void setMAccountTitlePK(MAccountTitlePK mAccountTitlePK) {
 		this.mAccountTitlePK = mAccountTitlePK;
+	}
+
+	public long getAccountBookNo() {
+		return this.mAccountTitlePK.getAccountBookNo();
+	}
+
+	public void setAccountBookNo(long accountBookNo) {
+		this.mAccountTitlePK.setAccountBookNo(accountBookNo);
+	}
+
+	public String getCode() {
+		return this.mAccountTitlePK.getCode();
+	}
+
+	public void setCode(String code) {
+		this.mAccountTitlePK.setCode(code);
 	}
 
 	public String getName() {
@@ -122,6 +115,7 @@ public class MAccountTitle implements Serializable {
 	}
 
 	public void setMAccountBook(MAccountBook mAccountBook) {
+		this.setAccountBookNo(mAccountBook.getNo());
 		this.mAccountBook = mAccountBook;
 	}
 
@@ -130,34 +124,40 @@ public class MAccountTitle implements Serializable {
 		return mAccountTitleItemList;
 	}
 
+	@Deprecated
 	public void setMAccountTitleItemList(List<MAccountTitleItem> mAccountTitleItemList) {
 		this.mAccountTitleItemList = mAccountTitleItemList;
 	}
 
-	@XmlTransient
-	public List<TJournalDetail> getTJournalDetailList() {
-		return tJournalDetailList;
-	}
-
-	public void setTJournalDetailList(List<TJournalDetail> tJournalDetailList) {
-		this.tJournalDetailList = tJournalDetailList;
+	/**
+	 * 品目を追加します。
+	 * @param mAccountTitleItem 品目
+	 */
+	public void addMAccountTitleItem(MAccountTitleItem mAccountTitleItem) {
+		this.mAccountTitleItemList.add(mAccountTitleItem);
+		mAccountTitleItem.setMAccountTitle(this);
 	}
 
 	@Override
 	public int hashCode() {
-		int hash = 0;
-		hash += (mAccountTitlePK != null ? mAccountTitlePK.hashCode() : 0);
+		int hash = 7;
+		hash = 71 * hash + Objects.hashCode(this.mAccountTitlePK);
 		return hash;
 	}
 
 	@Override
-	public boolean equals(Object object) {
-		// TODO: Warning - this method won't work in the case the id fields are not set
-		if (!(object instanceof MAccountTitle)) {
+	public boolean equals(Object obj) {
+		if(this == obj) {
+			return true;
+		}
+		if(obj == null) {
 			return false;
 		}
-		MAccountTitle other = (MAccountTitle) object;
-		if ((this.mAccountTitlePK == null && other.mAccountTitlePK != null) || (this.mAccountTitlePK != null && !this.mAccountTitlePK.equals(other.mAccountTitlePK))) {
+		if(getClass() != obj.getClass()) {
+			return false;
+		}
+		final MAccountTitle other = (MAccountTitle) obj;
+		if(!Objects.equals(this.mAccountTitlePK, other.mAccountTitlePK)) {
 			return false;
 		}
 		return true;
@@ -168,11 +168,4 @@ public class MAccountTitle implements Serializable {
 		return "jp.co.kasan.db.entity.MAccountTitle[ mAccountTitlePK=" + mAccountTitlePK + " ]";
 	}
 
-	/**
-	 * コードを取得します。
-	 * @return コード
-	 */
-	public String getCode() {
-		return this.getMAccountTitlePK().getCode();
-	}
 }

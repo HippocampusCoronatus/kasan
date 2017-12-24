@@ -2,8 +2,6 @@
 package jp.co.kasan.journal;
 
 import java.util.EnumSet;
-import java.util.List;
-import java.util.stream.Collectors;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -38,16 +36,16 @@ public class GeneralAccountBookGenerator {
 		book.setNo(no);
 		book.setName(name);
 		// システムで使用する固定の勘定科目を設定。
-		List<MAccountTitle> titles = EnumSet.allOf(SystemAccountTitle.class).stream()
+		EnumSet.allOf(SystemAccountTitle.class).stream()
 				.map(s -> {
-					MAccountTitle title = new MAccountTitle(book, s.getCode());
+					MAccountTitle title = new MAccountTitle();
+					title.setCode(s.getCode());
 					title.setName(s.getName());
 					title.setType(s.getType());
 					title.setAccountTitleGroup("一般");
 					return title;
 				})
-				.collect(Collectors.toList());
-		book.setMAccountTitleList(titles);
+				.forEach(book::addMAccountTitle);
 		return book;
 	}
 }

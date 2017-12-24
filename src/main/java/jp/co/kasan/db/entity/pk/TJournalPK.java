@@ -2,7 +2,6 @@
 package jp.co.kasan.db.entity.pk;
 
 import java.io.Serializable;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
@@ -14,21 +13,15 @@ import javax.validation.constraints.NotNull;
 @Embeddable
 public class TJournalPK implements Serializable {
 
-	@Basic(optional = false)
-    @NotNull
-    @Column(name = "account_book_no")
+	@NotNull
+	@Column(name = "account_book_no")
 	private long accountBookNo;
-	@Basic(optional = false)
-    @NotNull
-    @Column(name = "no")
+
+	@NotNull
+	@Column(name = "no")
 	private long no;
 
 	public TJournalPK() {
-	}
-
-	public TJournalPK(long accountBookNo, long no) {
-		this.accountBookNo = accountBookNo;
-		this.no = no;
 	}
 
 	public long getAccountBookNo() {
@@ -49,23 +42,24 @@ public class TJournalPK implements Serializable {
 
 	@Override
 	public int hashCode() {
-		int hash = 0;
-		hash += (int) accountBookNo;
-		hash += (int) no;
+		int hash = 7;
+		hash = 59 * hash + (int) (this.accountBookNo ^ (this.accountBookNo >>> 32));
 		return hash;
 	}
 
 	@Override
-	public boolean equals(Object object) {
-		// TODO: Warning - this method won't work in the case the id fields are not set
-		if (!(object instanceof TJournalPK)) {
+	public boolean equals(Object obj) {
+		if(this == obj) {
+			return true;
+		}
+		if(obj == null) {
 			return false;
 		}
-		TJournalPK other = (TJournalPK) object;
-		if (this.accountBookNo != other.accountBookNo) {
+		if(getClass() != obj.getClass()) {
 			return false;
 		}
-		if (this.no != other.no) {
+		final TJournalPK other = (TJournalPK) obj;
+		if(this.accountBookNo != other.accountBookNo) {
 			return false;
 		}
 		return true;
@@ -75,5 +69,5 @@ public class TJournalPK implements Serializable {
 	public String toString() {
 		return "jp.co.kasan.db.TJournalPK[ accountBookNo=" + accountBookNo + ", no=" + no + " ]";
 	}
-	
+
 }

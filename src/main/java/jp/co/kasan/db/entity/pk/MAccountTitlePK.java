@@ -2,7 +2,7 @@
 package jp.co.kasan.db.entity.pk;
 
 import java.io.Serializable;
-import javax.persistence.Basic;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
@@ -15,14 +15,13 @@ import javax.validation.constraints.Size;
 @Embeddable
 public class MAccountTitlePK implements Serializable {
 
-	@Basic(optional = false)
-    @NotNull
-    @Column(name = "account_book_no")
+	@NotNull
+	@Column(name = "account_book_no")
 	private long accountBookNo;
-	@Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 6)
-    @Column(name = "code")
+
+	@NotNull
+	@Size(min = 1, max = 6)
+	@Column(name = "code")
 	private String code;
 
 	public MAccountTitlePK() {
@@ -51,23 +50,28 @@ public class MAccountTitlePK implements Serializable {
 
 	@Override
 	public int hashCode() {
-		int hash = 0;
-		hash += (int) accountBookNo;
-		hash += (code != null ? code.hashCode() : 0);
+		int hash = 7;
+		hash = 89 * hash + (int) (this.accountBookNo ^ (this.accountBookNo >>> 32));
+		hash = 89 * hash + Objects.hashCode(this.code);
 		return hash;
 	}
 
 	@Override
-	public boolean equals(Object object) {
-		// TODO: Warning - this method won't work in the case the id fields are not set
-		if (!(object instanceof MAccountTitlePK)) {
+	public boolean equals(Object obj) {
+		if(this == obj) {
+			return true;
+		}
+		if(obj == null) {
 			return false;
 		}
-		MAccountTitlePK other = (MAccountTitlePK) object;
-		if (this.accountBookNo != other.accountBookNo) {
+		if(getClass() != obj.getClass()) {
 			return false;
 		}
-		if ((this.code == null && other.code != null) || (this.code != null && !this.code.equals(other.code))) {
+		final MAccountTitlePK other = (MAccountTitlePK) obj;
+		if(this.accountBookNo != other.accountBookNo) {
+			return false;
+		}
+		if(!Objects.equals(this.code, other.code)) {
 			return false;
 		}
 		return true;
@@ -77,5 +81,5 @@ public class MAccountTitlePK implements Serializable {
 	public String toString() {
 		return "jp.co.kasan.db.entity.MAccountTitlePK[ accountBookNo=" + accountBookNo + ", code=" + code + " ]";
 	}
-	
+
 }
