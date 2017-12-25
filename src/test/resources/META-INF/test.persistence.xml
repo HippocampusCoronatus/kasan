@@ -8,8 +8,9 @@
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <!-- 実行時にテーブルの生成をエンティティから行う。 -->
-      <!--<property name="javax.persistence.schema-generation.database.action" value="create"/>--> 
-      <!--<property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>--> 
+      <!--<property name="javax.persistence.schema-generation.database.action" value="create"/>-->
+			<!-- ↓の1行は初回のみ必ず実行すること。2回目以降はビルドが遅ければコメントアウトしても可 -->
+      <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/> 
       <property name="javax.persistence.schema-generation.create-source" value="metadata"/>
       <property name="eclipselink.logging.level" value="FINE"/>
 			<mapping-file>META-INF/orm.xml</mapping-file>
