@@ -27,7 +27,7 @@ mysql -u root -p
 ###### 3.kasanスキーマの作成
 ```
 create database kasan;
-create datebase kasan_test;
+create database kasan_test;
 ```
 
 ###### 4.kasanユーザーの作成
@@ -53,7 +53,6 @@ show grants;
 ###### 7.テーブルの作成
 ```
 source [プロジェクトのルートパス]/src/main/resources/data/Kasan.sql
-source [プロジェクトのルートパス]/src/main/resources/data/Kasan_test.sql
 ```
 
 ##### ②NetBeansとサーバーの準備・実行
