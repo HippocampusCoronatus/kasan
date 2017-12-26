@@ -5,8 +5,8 @@
     <article>
       <section>
         <h4>【あなたのかしかり】</h4>
-        <p v-for="(account, index) in accountList" v-bind:key="index" v-cloak>
-          {{account.PartnerMemberID}} : {{account.LoanAmount}}
+        <p v-for="(loan, index) in loanList" v-bind:key="index" v-cloak>
+          {{loan.PartnerMemberID}} : {{loan.LoanAmount}}
         </p>
       </section>
     </article>
@@ -33,7 +33,7 @@ import axios from "axios";
 export default class MainPage extends Vue {
 
   name: string = "";
-  accountList: Array<string> = [];
+  loanList: Array<string> = [];
   inputName: string = "";
   amountOfManey: string = "";
 
@@ -64,15 +64,15 @@ export default class MainPage extends Vue {
   created() {
     axios.all([
       this.addConfig.get("api/members/me"),
-      this.addConfig.get("api/accounts")
+      this.addConfig.get("api/loans")
     ])
-    .then( axios.spread( (me: any, accounts: any) => {
-      if (me.status === 204 || accounts.status === 204) {
+    .then( axios.spread( (me: any, loans: any) => {
+      if (me.status === 204 || loans.status === 204) {
         alert("データがありませんでした。");
         this.$router.push('/kasan/login');
       }
       this.name = me.data.Name + "さんのページ";
-      this.accountList = accounts.data;
+      this.loanList = loans.data;
     }))
     .catch((e: any) => {
       alert("初期化通信に失敗しました。");
