@@ -6,7 +6,10 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
+import static org.hamcrest.core.Is.is;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -50,6 +53,13 @@ public class MMemberTest {
 		em.persist(m);
 
 		tran.commit();
+
+		{
+			TypedQuery<MMember> query = em.createQuery("SELECT m FROM MMember m ORDER BY m.no DESC", MMember.class);
+			int size = query.getResultList().size();
+			Assert.assertThat(size, is(1));
+			
+		}
 	}
 
 	/**

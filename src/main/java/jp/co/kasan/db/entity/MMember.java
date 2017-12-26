@@ -4,6 +4,7 @@ package jp.co.kasan.db.entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,24 +26,24 @@ public class MMember implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-    @NotNull
-    @Column(name = "no")
+	@NotNull
+	@Column(name = "no")
 	private Long no;
 
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "email")
+	@NotNull
+	@Size(min = 1, max = 255)
+	@Column(name = "email")
 	private String email;
 
-    @NotNull
-    @Size(min = 1, max = 30)
-    @Column(name = "name")
+	@NotNull
+	@Size(min = 1, max = 30)
+	@Column(name = "name")
 	private String name;
 
-    @Column(name = "password")
+	@Column(name = "password")
 	private byte[] password;
 
-	@ManyToMany(mappedBy = "mMemberList", cascade = {CascadeType.PERSIST})
+	@ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "mMemberList")
 	private List<MAccountBook> mAccountBookList;
 
 	public MMember() {
@@ -86,8 +87,14 @@ public class MMember implements Serializable {
 		return mAccountBookList;
 	}
 
+	@Deprecated
+	public void setMAccountBookList(List<MAccountBook> mAccountBookList) {
+		this.mAccountBookList = mAccountBookList;
+	}
+
 	/**
 	 * 会計帳簿を追加します。
+	 *
 	 * @param book 会計帳簿
 	 */
 	public void addMAccountBook(MAccountBook book) {
@@ -97,19 +104,24 @@ public class MMember implements Serializable {
 
 	@Override
 	public int hashCode() {
-		int hash = 0;
-		hash += (no != null ? no.hashCode() : 0);
+		int hash = 7;
+		hash = 53 * hash + Objects.hashCode(this.no);
 		return hash;
 	}
 
 	@Override
-	public boolean equals(Object object) {
-		// TODO: Warning - this method won't work in the case the id fields are not set
-		if (!(object instanceof MMember)) {
+	public boolean equals(Object obj) {
+		if(this == obj) {
+			return true;
+		}
+		if(obj == null) {
 			return false;
 		}
-		MMember other = (MMember) object;
-		if ((this.no == null && other.no != null) || (this.no != null && !this.no.equals(other.no))) {
+		if(getClass() != obj.getClass()) {
+			return false;
+		}
+		final MMember other = (MMember) obj;
+		if(!Objects.equals(this.no, other.no)) {
 			return false;
 		}
 		return true;
@@ -117,7 +129,7 @@ public class MMember implements Serializable {
 
 	@Override
 	public String toString() {
-		return "jp.co.kasan.db.MMember[ no=" + no + " ]";
+		return "jp.co.kasan.db.MMember[ mMemberPK=" + this.no + " ]";
 	}
-	
+
 }

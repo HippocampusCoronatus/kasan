@@ -2,7 +2,7 @@
 package jp.co.kasan.db.entity.pk;
 
 import java.io.Serializable;
-import javax.persistence.Basic;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
@@ -16,37 +16,28 @@ import jp.co.kasan.journal.type.DebitCreditType;
 @Embeddable
 public class TJournalDetailItemPK implements Serializable {
 
-	@Basic(optional = false)
-    @NotNull
-    @Column(name = "account_book_no")
+	@NotNull
+	@Column(name = "account_book_no")
 	private long accountBookNo;
-	@Basic(optional = false)
-    @NotNull
-    @Column(name = "journal_no")
+
+	@NotNull
+	@Column(name = "journal_no")
 	private long journalNo;
-	@Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "journal_detail_type")
+
+	@NotNull
+	@Size(min = 1, max = 255)
+	@Column(name = "journal_detail_type")
 	private DebitCreditType journalDetailType;
-	@Basic(optional = false)
-    @NotNull
-    @Column(name = "journal_detail_no")
+
+	@NotNull
+	@Column(name = "journal_detail_no")
 	private long journalDetailNo;
-	@Basic(optional = false)
-    @NotNull
-    @Column(name = "no")
+
+	@NotNull
+	@Column(name = "no")
 	private long no;
 
 	public TJournalDetailItemPK() {
-	}
-
-	public TJournalDetailItemPK(long accountBookNo, long journalNo, DebitCreditType journalDetailType, long journalDetailNo, long no) {
-		this.accountBookNo = accountBookNo;
-		this.journalNo = journalNo;
-		this.journalDetailType = journalDetailType;
-		this.journalDetailNo = journalDetailNo;
-		this.no = no;
 	}
 
 	public long getAccountBookNo() {
@@ -91,35 +82,40 @@ public class TJournalDetailItemPK implements Serializable {
 
 	@Override
 	public int hashCode() {
-		int hash = 0;
-		hash += (int) accountBookNo;
-		hash += (int) journalNo;
-		hash += (journalDetailType != null ? journalDetailType.hashCode() : 0);
-		hash += (int) journalDetailNo;
-		hash += (int) no;
+		int hash = 3;
+		hash = 47 * hash + (int) (this.accountBookNo ^ (this.accountBookNo >>> 32));
+		hash = 47 * hash + (int) (this.journalNo ^ (this.journalNo >>> 32));
+		hash = 47 * hash + Objects.hashCode(this.journalDetailType);
+		hash = 47 * hash + (int) (this.journalDetailNo ^ (this.journalDetailNo >>> 32));
+		hash = 47 * hash + (int) (this.no ^ (this.no >>> 32));
 		return hash;
 	}
 
 	@Override
-	public boolean equals(Object object) {
-		// TODO: Warning - this method won't work in the case the id fields are not set
-		if (!(object instanceof TJournalDetailItemPK)) {
+	public boolean equals(Object obj) {
+		if(this == obj) {
+			return true;
+		}
+		if(obj == null) {
 			return false;
 		}
-		TJournalDetailItemPK other = (TJournalDetailItemPK) object;
-		if (this.accountBookNo != other.accountBookNo) {
+		if(getClass() != obj.getClass()) {
 			return false;
 		}
-		if (this.journalNo != other.journalNo) {
+		final TJournalDetailItemPK other = (TJournalDetailItemPK) obj;
+		if(this.accountBookNo != other.accountBookNo) {
 			return false;
 		}
-		if ((this.journalDetailType == null && other.journalDetailType != null) || (this.journalDetailType != null && !this.journalDetailType.equals(other.journalDetailType))) {
+		if(this.journalNo != other.journalNo) {
 			return false;
 		}
-		if (this.journalDetailNo != other.journalDetailNo) {
+		if(this.journalDetailNo != other.journalDetailNo) {
 			return false;
 		}
-		if (this.no != other.no) {
+		if(this.no != other.no) {
+			return false;
+		}
+		if(this.journalDetailType != other.journalDetailType) {
 			return false;
 		}
 		return true;
@@ -129,5 +125,5 @@ public class TJournalDetailItemPK implements Serializable {
 	public String toString() {
 		return "jp.co.kasan.db.entity.TJournalDetailItemPK[ accountBookNo=" + accountBookNo + ", journalNo=" + journalNo + ", journalDetailType=" + journalDetailType + ", journalDetailNo=" + journalDetailNo + ", no=" + no + " ]";
 	}
-	
+
 }

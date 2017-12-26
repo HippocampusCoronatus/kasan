@@ -2,7 +2,7 @@
 package jp.co.kasan.db.entity.pk;
 
 import java.io.Serializable;
-import javax.persistence.Basic;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
@@ -15,18 +15,17 @@ import javax.validation.constraints.Size;
 @Embeddable
 public class MAccountTitleItemPK implements Serializable {
 
-	@Basic(optional = false)
-    @NotNull
-    @Column(name = "account_book_no")
+	@NotNull
+	@Column(name = "account_book_no")
 	private long accountBookNo;
-	@Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 6)
-    @Column(name = "account_title_code")
+
+	@NotNull
+	@Size(min = 1, max = 6)
+	@Column(name = "account_title_code")
 	private String accountTitleCode;
-	@Basic(optional = false)
-    @NotNull
-    @Column(name = "no")
+
+	@NotNull
+	@Column(name = "no")
 	private long no;
 
 	public MAccountTitleItemPK() {
@@ -64,27 +63,32 @@ public class MAccountTitleItemPK implements Serializable {
 
 	@Override
 	public int hashCode() {
-		int hash = 0;
-		hash += (int) accountBookNo;
-		hash += (accountTitleCode != null ? accountTitleCode.hashCode() : 0);
-		hash += (int) no;
+		int hash = 7;
+		hash = 79 * hash + (int) (this.accountBookNo ^ (this.accountBookNo >>> 32));
+		hash = 79 * hash + Objects.hashCode(this.accountTitleCode);
+		hash = 79 * hash + (int) (this.no ^ (this.no >>> 32));
 		return hash;
 	}
 
 	@Override
-	public boolean equals(Object object) {
-		// TODO: Warning - this method won't work in the case the id fields are not set
-		if (!(object instanceof MAccountTitleItemPK)) {
+	public boolean equals(Object obj) {
+		if(this == obj) {
+			return true;
+		}
+		if(obj == null) {
 			return false;
 		}
-		MAccountTitleItemPK other = (MAccountTitleItemPK) object;
-		if (this.accountBookNo != other.accountBookNo) {
+		if(getClass() != obj.getClass()) {
 			return false;
 		}
-		if ((this.accountTitleCode == null && other.accountTitleCode != null) || (this.accountTitleCode != null && !this.accountTitleCode.equals(other.accountTitleCode))) {
+		final MAccountTitleItemPK other = (MAccountTitleItemPK) obj;
+		if(this.accountBookNo != other.accountBookNo) {
 			return false;
 		}
-		if (this.no != other.no) {
+		if(this.no != other.no) {
+			return false;
+		}
+		if(!Objects.equals(this.accountTitleCode, other.accountTitleCode)) {
 			return false;
 		}
 		return true;
@@ -94,5 +98,5 @@ public class MAccountTitleItemPK implements Serializable {
 	public String toString() {
 		return "jp.co.kasan.db.entity.MAccountTitleItemPK[ accountBookNo=" + accountBookNo + ", accountTitleCode=" + accountTitleCode + ", no=" + no + " ]";
 	}
-	
+
 }
