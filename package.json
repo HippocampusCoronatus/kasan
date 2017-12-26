@@ -1,0 +1,37 @@
+{
+  "name": "kasan",
+  "version": "1.0.0",
+  "description": "かあさんメンバーによるリポジトリ！",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HippocampusCoronatus/kasan.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HippocampusCoronatus/kasan/issues"
+  },
+  "homepage": "https://github.com/HippocampusCoronatus/kasan#readme",
+  "dependencies": {
+    "axios": "^0.17.1",
+    "vue": "^2.5.9",
+    "vue-class-component": "^6.0.0",
+    "vue-property-decorator": "^6.0.0",
+    "vue-router": "^3.0.1"
+  },
+  "devDependencies": {
+    "css-loader": "^0.28.1",
+    "style-loader": "^0.19.0",
+    "ts-loader": "^2.0.3",
+    "typescript": "^2.3.2",
+    "vue-loader": "^12.0.3",
+    "vue-template-compiler": "^2.5.2",
+    "webpack": "^2.5.0",
+    "webpack-dev-server": "^2.9.5"
+  }
+}
